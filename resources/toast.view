@@ -1,0 +1,6 @@
+<svg viewport-fill="#232946">
+  <svg id="toast">
+      <rect id="toast-bg" />
+      <textarea id="toast-text" />
+  </svg>
+</svg>

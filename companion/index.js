@@ -39,8 +39,8 @@ messaging.peerSocket.addEventListener("message", async (evt) => {
 });
 
 async function login() {
-  const userId = JSON.parse(settingsStorage.getItem("userId")).name;
-  const token = JSON.parse(settingsStorage.getItem("token")).name;
+  const userId = JSON.parse(settingsStorage.getItem("userId"))?.name;
+  const token = JSON.parse(settingsStorage.getItem("token"))?.name;
 
   if (!userId || !token) {
     console.log("userId or token is not entered");
