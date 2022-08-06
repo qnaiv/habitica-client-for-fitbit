@@ -1,8 +1,8 @@
-<svg>
+<svg viewport-fill="#232946">
   <svg id="list">
     <use href="#scrollview">
       <use href="#view-header" class="header">
-        <set href="#text" attributeName="text-buffer" to="Todo" />
+        <set href="#header-text" attributeName="text-buffer" to="Todo" />
       </use>
       <use id="todoList" href="#tile-list" class="main">
         <var id='virtual' value='1' />
@@ -31,8 +31,12 @@
     </use>
   </svg>
   <svg id="detail" display="none">
-      <textarea id="habit-title" x="25" y="50" width="100%-50" text-length="1024" />
+      <textarea id="habit-title" />
       <use id="habit-plus" href="#text-button" class="text-button bottom left" />
       <use id="habit-minus" href="#text-button" class="text-button bottom right" />
+  </svg>
+  <svg id="toast" display="none">
+      <rect id="toast-bg" />
+      <textarea id="toast-text" />
   </svg>
 </svg>

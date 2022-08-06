@@ -1,18 +1,24 @@
-/* .defaultText {
-  font-size: 32;
-  font-family: System-Regular;
-  font-weight: regular;
-  text-length: 32;
-}
+.application-fill           { fill: fb-pink; }
+.foreground-fill            { fill: fb-white; }
+.background-fill            { fill: fb-black; }
 
-#background {
-  width: 100%;
-  height: 100%;
-  fill: white;
-} */
 .header{
   height: 12%;
-  fill: "lightseagreen";
+}
+#header-bg{
+  fill: "#232946";
+  x:"0";
+  y:"0";
+  width:"100%";
+  height:"100%";
+}
+#header-text{
+  x: "50%";
+  y: "50%+10";
+  fill: "white";
+  font-size: "30";
+  font-weight: "bold";
+  text-anchor: "middle";
 }
 
 .main{
@@ -39,8 +45,8 @@
   y: 100%-6;
 }
 
-.bg {
-  fill: "white";
+#todo-bg {
+  fill: "#fffffe";
   width: 100%;
   height: 100%;
   x: 0;
@@ -55,10 +61,7 @@
   opacity: 0;
 }
 
-.application-fill           { fill: fb-pink; }
-.foreground-fill            { fill: fb-white; }
-.background-fill            { fill: fb-black; }
-
+/* habit detail */
 #detail .detail-text{
   fill: "white"
 }
@@ -70,5 +73,26 @@
 }
 
 #habit-title{
-  fill: "white"
+  fill: "white";
+  x:"25";
+  y:"50";
+  width:"100%-50";
+  text-length:"1024";
+}
+
+/* toast */
+#toast-bg {
+  fill: "#eebbc3";
+  x: 0%;
+  y: 0%;
+  width: 100%;
+  height: 100%;
+}
+#toast-text {
+  fill: "black";
+  text-length: 1024;
+  x: 25;
+  y: 50;
+  width:"100%-50";
+  text-anchor: middle;
 }

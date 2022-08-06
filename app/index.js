@@ -1,136 +1,98 @@
-import * as fs from "fs";
 import * as document from "document";
-import * as messaging from "messaging";
+import * as fs from "fs";
+import { inbox } from "file-transfer";
+import ListPage from "./list-page";
+import HabitDetailPage from "./habit-detail-page";
 
-
-// let VTList = document.getElementById('todoList');
-// let habiticaData = {};
-let listScreen = document.getElementById("list");
-let detailScreen = document.getElementById("detail");
-let currentScreen = "ListPage";
-
+/**
+ * ルーティング
+ */
 class Router {
-  constructor() {
+  constructor(pages) {
     this.currentPage = "ListPage";
-
-    // page element
-    this.listPageElm = document.getElementById("list");
-    this.habitDetailPageElm = document.getElementById("detail");
-
-    // page controller
-    this.listPage = new ListPage();
-    this.habitDetailPage = new HabitDetailPage();
-
-    document.onkeypress = function (evt) {
-      if (evt.key === "back") {
-        console.log("back pressed");
-        if (currentScreen === "ListPage") {
-          console.log("listpage");
-        } else if (currentScreen === "HabitDetailPage") {
-          console.log("habitdetailpage");
-          // Go to list page
-          this.switchPage("ListPage");
-          evt.preventDefault();
-        }
-      }
-    };
+    this.pages = pages;
   }
 
+  /**
+   * ページ切り替え
+   * @param {*} page ページ名
+   * @param {*} obj renderメソッドに渡すオブジェクト
+   */
   switchPage(page, obj) {
     if (page === "ListPage") {
-      this.listPageElm.style.display = "inline";
-      this.habitDetailPageElm.style.display = "none";
       this.currentPage = "ListPage";
-      this.listPage.render();
-    } else if (page === "DetailPage") {
-      this.listPageElm.style.display = "none";
-      this.habitDetailPageElm.style.display = "inline";
-      this.currentPage = "DetailPage";
-      this.habitDetailPage.render(obj);
+      this.pages["ListPage"].render();
+      this.pages["HabitDetailPage"].hide();
+    } else if (page === "HabitDetailPage") {
+      this.currentPage = "HabitDetailPage";
+      this.pages["HabitDetailPage"].render(obj);
+      this.pages["ListPage"].hide();
+    }
+  }
+
+  /**
+   * 前ページに戻る
+   * @param {*} evt 
+   */
+  switchPrevPage(evt) {
+    if (evt.key === "back") {
+      console.log(`back pressed. currentPage: ${this.currentPage}`);
+      if (this.currentPage === "ListPage") {
+      } else if (this.currentPage === "HabitDetailPage") {
+        // Go to list page
+        this.switchPage("ListPage");
+        evt.preventDefault();
+      }
     }
   }
 }
 
-class ListPage {
-  VTList = document.getElementById("todoList");
-  habiticaData = {};
-  render() {
-    currentScreen = "ListPage";
-    const self = this;
-    listScreen.style.display = "inline";
-    detailScreen.style.display = "none";
-
-    self.habiticaData = this.getStoredHabiticaData();
-    self.VTList.delegate = {
-      getTileInfo: function (index) {
-        return {
-          type: "todo-pool",
-          value: "Item",
-          index: index,
-        };
-      },
-      configureTile: function (tile, info) {
-        if (info.type == "todo-pool") {
-          const habits = self.habiticaData?.habit;
-          tile.getElementById("text").text = `${habits[info.index]?.text}`;
-
-          let touch = tile.getElementById("touch");
-          touch.onclick = function () {
-            router.switchPage("DetailPage", habits[info.index]);
-          };
-        }
-      },
+/**
+ * 習慣データ取得
+ * @returns {object} habiticaData
+ */
+function getStoredHabiticaData() {
+  try {
+    let storedHabiticaData = fs.readFileSync("habitica-data.cbor", "cbor");
+    console.log(JSON.stringify(storedHabiticaData));
+    return {
+      todo: storedHabiticaData?.todo,
+      habit: storedHabiticaData?.habit,
+      daily: storedHabiticaData?.daily,
     };
-    self.VTList.length = self.habiticaData.todo.length;
-  }
-
-  getStoredHabiticaData() {
-    try {
-      let storedHabiticaData = fs.readFileSync("habitica-data.cbor", "cbor");
-      return {
-        todo: storedHabiticaData?.todo,
-        habit: storedHabiticaData?.habit,
-        daily: storedHabiticaData?.daily,
-      };
-    } catch (err) {
-      console.log("Err " + err);
-    }
+  } catch (err) {
+    console.log("Err " + err);
   }
 }
 
-class HabitDetailPage {
-  currentHabit = {};
-  render(habitDetail) {
-    const self = this;
-    this.currentHabit = habitDetail;
-    currentScreen = "HabitDetailPage";
-    listScreen.style.display = "none";
-    detailScreen.style.display = "inline";
-    
-    document.getElementById("habit-title").text = habitDetail.text;
-    const plusButton = document.getElementById("habit-plus");
-    plusButton.text = "+";
-    plusButton.addEventListener("click", function (evt) {
-        console.log("plus button clicked");
-        self.sendHabitAction("plus");
-    });
-    const minusButton = document.getElementById("habit-minus");
-    minusButton.text = "-";
-    minusButton.addEventListener("click", function (evt) {
-        console.log("minus button clicked");   
-        self.sendHabitAction("minus");
-    });
-  }
-  sendHabitAction(action){
-    console.log("send habit action");
-    if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
-        messaging.peerSocket.send({
-          command: `habit-${action}`,
-          habitId: this.currentHabit.id,
-        });
-    }
+/**
+ * ファイル転送受信時の処理
+ */
+inbox.onnewfile = () => {
+  let fileName;
+  while (fileName = inbox.nextFile()) {
+      if (fileName === 'habitica-data.cbor') {
+        init();
+      }
   }
 }
 
-const router = new Router();
-router.switchPage("ListPage");
+function init(){
+  const router = new Router({
+    ListPage: new ListPage({
+      habits: getStoredHabiticaData().habit,
+      onHabitSelected: (habitData) => router.switchPage("HabitDetailPage", habitData),
+    }),
+    HabitDetailPage: new HabitDetailPage(),
+  });
+  
+  // ListPageを表示
+  router.switchPage("ListPage");
+
+  /**
+   * ボタン押下時の処理
+   * @param {*} evt 
+   * @returns 
+   */
+  document.onkeypress = (evt) => router.switchPrevPage(evt);
+}
