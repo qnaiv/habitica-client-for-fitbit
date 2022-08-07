@@ -2,39 +2,4 @@
   <svg id="loading" class="full-size">
     <text class="h2 center-text horizontal-pad" x="50%" fill="white">Loading..</text>
   </svg>
-  <use id="main" href="#scrollview" display="none">
-    <use href="#scrollview-item" height="200">
-      <rect id="hero" width="100%" height="100%" fill="#232946" />
-      <svg class="container" x="80" y="20">
-        <svg id="profile-container">
-          <text id="label-profile" class="h3" x="0" y="40" text-length="20" fill="white" />
-          <text id="label-lvl" class="defaultText" x="0" y="65" text-length="10" />
-        </svg>
-        <svg id="hp-container">
-          <text id="label-hp" class="defaultText" x="30" y="93" />
-          <image href="hp-20x20.png" x="0" y="75" width ="20" height="20" />
-        </svg>
-        <svg id="exp-container">
-          <text id="label-exp" class="defaultText" x="30" y="123" />
-          <image href="exp-20x20.png" x="0" y="105" width ="20" height="20"/>
-        </svg>
-        <svg id="mp-container">
-          <text id="label-mp" class="defaultText" x="30" y="153" />
-          <image href="mp-20x20.png" x="0" y="135" width ="20" height="20"/>
-        </svg>
-      </svg>
-    </use>
-    <use href="#scrollview-item" height="100">
-      <rect id="habit-list" width="100%" height="95%" fill="white" pointer-events="all" />
-      <text class="h2 center-text" width="100%" height="95%" x="50%">Habit</text>
-    </use>
-    <use href="#scrollview-item" height="100">
-      <rect id="daily-list" width="100%" height="95%" fill="white" pointer-events="all" />
-      <text class="h2 center-text" width="100%" height="95%" x="50%">Daily</text>
-    </use>
-    <use href="#scrollview-item" height="100">
-      <rect id="todo-list" width="100%" height="95%" fill="white" pointer-events="all" />
-      <text class="h2 center-text" width="100%" height="95%" x="50%">Todo</text>
-    </use>
-  </use>
 </svg>

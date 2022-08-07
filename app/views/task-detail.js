@@ -8,7 +8,7 @@ let currentTask = {};
 /**
  * 習慣詳細表示
  */
-export default ({taskDetail, taskType}) => {
+export default ({taskDetail, taskType, onScoreTask}) => {
   currentTask = taskDetail;
 
   // アクション実行後のトースト表示
@@ -16,6 +16,7 @@ export default ({taskDetail, taskType}) => {
     console.log(`App received: ${JSON.stringify(evt)}`);
     if (evt.data.command === "task-action-result") {
       console.log("action result received");
+      onScoreTask(currentTask.id);
       document.location.replace("toast.view").then(() => {
         Toast({
           message: `Done!  

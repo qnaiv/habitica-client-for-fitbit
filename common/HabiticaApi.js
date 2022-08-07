@@ -47,7 +47,7 @@ export default class HabiticaApi {
     .then((res) => {
       const habit = res?.data?.filter((data) => data.type === "habit")
         .map((data) => {
-          return { 
+          return {
             id: data.id, 
             text: data.text, 
             notes: data.notes,
@@ -63,6 +63,7 @@ export default class HabiticaApi {
           return { id: data.id, text: data.text, notes: data.notes };
         });
       const daily = res?.data?.filter((data) => data.type === "daily")
+        .filter((data) => data.isDue)
         .map((data) => {
           return { id: data.id, text: data.text, notes: data.notes };
         });
@@ -119,7 +120,6 @@ export default class HabiticaApi {
     })
       .then((response) => response.json())
       .then((res) => {
-        console.log(JSON.stringify(res));
         return {
           hp: res.data.hp,
           mp: res.data.mp,
