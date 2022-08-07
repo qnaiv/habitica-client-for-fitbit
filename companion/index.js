@@ -21,7 +21,7 @@ messaging.peerSocket.addEventListener("message", async (evt) => {
 
     // モックデータ
     // messaging.peerSocket.send({
-    //   command: `habit-action-result`,
+    //   command: `task-action-result`,
     //   result: {
     //     hp: 10,
     //     mp: 10,
@@ -31,7 +31,7 @@ messaging.peerSocket.addEventListener("message", async (evt) => {
     // });
     const result = await habiticaApi.habitAction({id: evt.data.habitId, action: evt.data.action});
     messaging.peerSocket.send({
-      command: `habit-action-result`,
+      command: `task-action-result`,
       result: result
     });
     console.log("action sent");
@@ -47,15 +47,18 @@ async function login() {
     return;
   }
   await habiticaApi.login({ userId, token });
-  console.log(habiticaApi.loginSuccessed);
 }
 
 async function sendTasks() {
-  await habiticaApi.getData();
+  const tasks = await habiticaApi.getTasks();
+  const stats = await habiticaApi.getStats();
+
+  console.log(JSON.stringify(stats));
   outbox.enqueue('habitica-data.cbor', cbor.encode({
-    habit: habiticaApi.habit,
-    daily: habiticaApi.daily,
-    todo: habiticaApi.todo,
+    habit: tasks.habit,
+    daily: tasks.daily,
+    todo: tasks.todo,
+    stats: stats,
   }))
   .then(ft => { console.log('todos sent'); })
   .catch(error => { console.log("Error sending todos: " + error); });

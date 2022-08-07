@@ -10,7 +10,7 @@
   "fitbit": {
     "appUUID": "0e405924-2cb5-4de0-aac9-e22e003c8905",
     "appType": "app",
-    "appDisplayName": "Habitica Client For Fitbit",
+    "appDisplayName": "Fitbitica",
     "iconFile": "resources/icon.png",
     "wipeColor": "#ffffff",
     "requestedPermissions": [

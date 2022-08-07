@@ -3,9 +3,6 @@ export default class HabiticaApi {
     this.userId = null;
     this.token = null;
     this.loginSuccessed = false;
-    this.habit = null;
-    this.todo = null;
-    this.daily = null;
   }
 
   /**
@@ -23,18 +20,21 @@ export default class HabiticaApi {
       },
       method: "GET",
     })
-      .then((response) => response.json())
-      .then((res) => {
-        this.loginSuccessed = res.success;
-      });
+    .then((response) => response.json())
+    .then((res) => {
+      this.loginSuccessed = res.success;
+      return res.success;
+    });
   }
 
   /**
    * Habiticaからデータを取得する
    * @returns {Promise<void>} Habiticaデータ
    */
-  async getData() {
-    //   return fetch(encodeURI('https://habitica.com/api/v3/tasks/user'), {
+  async getTasks() {
+    if(!this.loginSuccessed) {
+      throw new Error("You are not logged in.");
+    }
     return fetch("https://habitica.com/api/v3/tasks/user", {
       headers: {
         Accept: "application/json",
@@ -45,7 +45,7 @@ export default class HabiticaApi {
     })
     .then((response) => response.json())
     .then((res) => {
-      this.habit = res?.data?.filter((data) => data.type === "habit")
+      const habit = res?.data?.filter((data) => data.type === "habit")
         .map((data) => {
           return { 
             id: data.id, 
@@ -58,14 +58,50 @@ export default class HabiticaApi {
             };
         });
 
-      this.todo = res?.data?.filter((data) => data.type === "todo")
+      const todo = res?.data?.filter((data) => data.type === "todo")
         .map((data) => {
           return { id: data.id, text: data.text, notes: data.notes };
         });
-      this.daily = res?.data?.filter((data) => data.type === "daily")
+      const daily = res?.data?.filter((data) => data.type === "daily")
         .map((data) => {
           return { id: data.id, text: data.text, notes: data.notes };
         });
+      return { habit, todo, daily };
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
+
+  async getStats() {
+    if(!this.loginSuccessed) {
+      throw new Error("You are not logged in.");
+    }
+    return fetch(`https://habitica.com/api/v3/user`, {
+      headers: {
+        Accept: "application/json",
+        "x-api-user": this.userId,
+        "x-api-key": this.token,
+        // "userFields": "stats, profile",
+      },
+      method: "GET",
+    })
+    .then((response) => response.json())
+    .then((res) => {
+      return {
+        name: res?.data?.profile?.name,
+        hp: res?.data?.stats?.hp,
+        mp: res?.data?.stats?.mp,
+        exp: res?.data?.stats?.exp,
+        gp: res?.data?.stats?.gp,
+        lvl: res?.data?.stats?.lvl,
+        maxHealth: res?.data?.stats?.maxHealth, 
+        maxMP: res?.data?.stats?.maxMP,
+        toNextLevel: res?.data?.stats?.toNextLevel,
+      }
+    })
+    .catch((err) => {
+      console.log(err);
     });
   }
 

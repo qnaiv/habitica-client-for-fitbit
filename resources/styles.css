@@ -2,6 +2,16 @@
 .foreground-fill            { fill: fb-white; }
 .background-fill            { fill: fb-black; }
 
+
+.defaultText {
+  font-size: 20;
+  font-family: System-Regular;
+  font-weight: regular;
+  text-length: 32;
+  fill: "fb-white";
+}
+
+
 .header{
   height: 12%;
 }
@@ -61,23 +71,40 @@
   opacity: 0;
 }
 
-/* habit detail */
+/* task detail */
 #detail .detail-text{
   fill: "white"
 }
 #habit-plus{
   fill: fb-mint;
 }
+#habit-plus #text{
+  text-buffer: "+";
+}
+
 #habit-minus{
   fill: fb-red;
 }
+#habit-minus #text{
+  text-buffer: "-";
+}
 
-#habit-title{
+#task-title{
   fill: "white";
   x:"25";
   y:"50";
   width:"100%-50";
   text-length:"1024";
+}
+
+#task-check{
+  fill: fb-mint;
+}
+#task-check #text { 
+  text-buffer: "done";
+}
+#task-check #image {
+  href: "done.png";
 }
 
 /* toast */

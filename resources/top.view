@@ -1,8 +1,5 @@
 <svg viewport-fill="#232946">
-  <svg id="loading" class="full-size">
-    <text class="h2 center-text horizontal-pad" x="50%" fill="white">Loading..</text>
-  </svg>
-  <use id="main" href="#scrollview" display="none">
+  <use id="main" href="#scrollview">
     <use href="#scrollview-item" height="200">
       <rect id="hero" width="100%" height="100%" fill="#232946" />
       <svg class="container" x="80" y="20">

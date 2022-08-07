@@ -1,0 +1,8 @@
+<svg viewport-fill="#232946">
+  <svg id="detail">
+      <textarea id="task-title" />
+      <use id="habit-plus" href="#text-button" class="text-button bottom left" display="none" />
+      <use id="habit-minus" href="#text-button" class="text-button bottom right" display="none" />
+      <use id="task-check" href="#icon-text-button" class="icon-text-button bottom" display="none" />
+  </svg>
+</svg>
